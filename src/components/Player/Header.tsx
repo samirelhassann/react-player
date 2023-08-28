@@ -2,15 +2,14 @@ import { ReactNode } from "react";
 
 import { MessageCircle } from "lucide-react";
 
-import { useAppSelector } from "../../store";
-import { useCurrentVideo } from "../../store/slices/player";
+import { useCurrentVideo, useStore } from "../../store";
 
 export function Header(): ReactNode {
+  const isLoading = useStore((store) => store.isLoading);
+
   const currentVideo = useCurrentVideo();
 
-  const isCourseLoading = useAppSelector((state) => state.player.isLoading);
-
-  if (isCourseLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2">

@@ -1,25 +1,25 @@
 import { ReactNode, useEffect } from "react";
 
 import { Playlist } from "../../model/Playlist";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { loadPlaylists } from "../../store/slices/player";
+import { useStore } from "../../store";
 import { Header } from "./Header";
 import { Module } from "./Module";
 import { VideoPlayer } from "./VideoPlayer";
 
 export function Player(): ReactNode {
-  const dispatch = useAppDispatch();
-  const isCourseLoading = useAppSelector((state) => state.player.isLoading);
-
-  const playlists = useAppSelector((state) => {
-    return state.player.playlists;
+  const { playlists, load, isLoading } = useStore((store) => {
+    return {
+      playlists: store.playlists,
+      isLoading: store.isLoading,
+      load: store.load,
+    };
   });
 
   useEffect(() => {
-    dispatch(loadPlaylists());
-  }, [dispatch]);
+    load();
+  }, [load]);
 
-  if (isCourseLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-zinc-950 text-zinc-50">
         <div className="flex w-[1100px] flex-col gap-6">
@@ -52,7 +52,7 @@ export function Player(): ReactNode {
         <main className="relative flex overflow-hidden border rounded-lg shadow border-zinc-800 bg-zinc-900 pr-80">
           <VideoPlayer />
 
-          {isCourseLoading ? (
+          {isLoading ? (
             <></>
           ) : (
             <aside className="absolute top-0 bottom-0 right-0 overflow-y-scroll border-l divide-y-2 w-80 divide-zinc-900 border-zinc-800 bg-zinc-900 scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-800">
